@@ -9,7 +9,7 @@ use std::process::exit;
 enum OverwriteMode { Force, Interactive, NoClobber, Default }
 
 fn main() {
-    // --- Argument Parsing ---
+    // Argument Parsing
     let args: Vec<String> = env::args().collect();
     let mut mode = OverwriteMode::Default;
     let mut files: Vec<String> = Vec::new();
@@ -36,7 +36,7 @@ fn main() {
         }
     }
 
-    // --- Validate File Arguments ---
+    // Validate File Arguments
     if files.len() != 2 {
         eprintln!("rmv: error: missing file operands (expected 2, got {})", files.len());
         exit(1);
@@ -46,8 +46,8 @@ fn main() {
     let source_path = Path::new(source_str);
     let target_path = Path::new(target_str);
 
-    // --- Pre-Move Checks ---
-    // Check source existence (using metadata which checks more than just existence)
+    // Pre-Move Checks
+    // Check source existence
     if fs::metadata(source_path).is_err() {
         eprintln!("rmv: error: cannot stat '{}': No such file or directory", source_str);
         exit(1);
@@ -58,16 +58,16 @@ fn main() {
          exit(1);
     }
 
-    // --- Handle Target Existence & Overwrite Logic ---
+    // Handle Target Existence & Overwrite Logic
     let mut proceed_with_move = true;
     if target_path.exists() {
         match mode {
             OverwriteMode::NoClobber => {
-                // -n: Do not overwrite, just exit successfully
+                // do not overwrite, just exit successfully
                 proceed_with_move = false;
             }
             OverwriteMode::Interactive => {
-                // -i: Prompt user
+                // prompt user
                 eprint!("rmv: overwrite {}? ", target_str);
                 io::stderr().flush().expect("Failed to flush stderr");
                 let mut response = String::new();

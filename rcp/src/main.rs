@@ -9,7 +9,7 @@ use std::process::exit;
 enum OverwriteMode { Force, Interactive, NoClobber, Default }
 
 fn main() {
-    // --- Argument Parsing ---
+    // Argument Parsing
     let args: Vec<String> = env::args().collect();
     let mut mode = OverwriteMode::Default;
     let mut verbose = false;
@@ -39,7 +39,7 @@ fn main() {
         }
     }
 
-    // --- Validate File Arguments ---
+    // Validate File Arguments
     if files.len() != 2 {
         eprintln!("rcp: error: missing file operands (expected 2, got {})", files.len());
         exit(1);
@@ -49,7 +49,7 @@ fn main() {
     let source_path = Path::new(source_str);
     let target_path = Path::new(target_str);
 
-    // --- Pre-Copy Checks ---
+    // Pre-Copy Checks
     // Check source exists and is a file
     if !source_path.is_file() {
         eprintln!("rcp: error: '{}: No such file or directory or not a regular file", source_str);
@@ -61,7 +61,7 @@ fn main() {
          exit(1);
     }
 
-    // --- Handle Target Existence & Overwrite Logic ---
+    // Handle target existence and overwrite logic
     let mut proceed_with_copy = true;
     if target_path.exists() {
         // Prevent overwriting directories
@@ -77,7 +77,7 @@ fn main() {
             }
             OverwriteMode::Interactive => {
                 eprint!("rcp: overwrite {}? ", target_str);
-                io::stderr().flush().expect("Failed to flush stderr"); // Use expect for simplicity
+                io::stderr().flush().expect("Failed to flush stderr"); 
                 let mut response = String::new();
                 io::stdin().read_line(&mut response).expect("Failed to read from stdin");
                 if !response.trim_start().to_lowercase().starts_with('y') {
@@ -94,7 +94,7 @@ fn main() {
         }
     }
 
-    // --- Perform Copy ---
+    // Perform Copy
     if proceed_with_copy {
         if verbose {
             println!("{} -> {}", source_str, target_str);

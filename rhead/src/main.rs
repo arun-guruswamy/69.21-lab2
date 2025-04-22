@@ -1,13 +1,13 @@
 use std::env;
 use std::fs::File;
-use std::io::{self, BufRead, BufReader}; // Removed ErrorKind as we'll use expect/exit
+use std::io::{self, BufRead, BufReader};
 use std::process::exit;
 
 // Default number of lines to print
 const DEFAULT_LINE_COUNT: usize = 10;
 
 fn main() {
-    // --- Argument Parsing ---
+    // Argument Parsing
     let args: Vec<String> = env::args().collect();
     let mut line_count = DEFAULT_LINE_COUNT;
     let mut file_paths: Vec<String> = Vec::new();
@@ -50,7 +50,7 @@ fn main() {
         print_headers = true;
     }
 
-    // --- Process Input ---
+    // Process Input
     let process_source = |reader: Box<dyn BufRead>, file_name: Option<&str>, print_header: bool| {
         // Print header if needed
         if print_header && file_name.is_some() {
@@ -73,7 +73,7 @@ fn main() {
     if file_paths.is_empty() {
         // Read from stdin
         let stdin = io::stdin();
-        let reader = Box::new(stdin.lock()); // Box::new to match type expected by closure
+        let reader = Box::new(stdin.lock()); 
         process_source(reader, None, false);
     } else {
         // Process files
@@ -85,11 +85,11 @@ fn main() {
             // Open file, exit on error
             match File::open(file_path) {
                 Ok(file) => {
-                    let reader = Box::new(BufReader::new(file)); // Box::new for type matching
+                    let reader = Box::new(BufReader::new(file)); 
                     process_source(reader, Some(file_path), print_headers);
                 }
                 Err(e) => {
-                    // Report file opening error and exit (could choose to continue)
+                    // Report file opening error and exit
                     eprintln!("rhead: {}: {}", file_path, e);
                     exit(1); 
                 }
